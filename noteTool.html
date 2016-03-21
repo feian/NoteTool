@@ -10,22 +10,23 @@
 	</style>
 </head>
 <body>
-	<button id="searchJiShu" value="常考题笔记/技术题-自作答案.txt" contentId="contentJishu">技术题</button>
-	<button id="searchJiChu" value="常考题笔记/基础题-自作答案.txt" contentId="contentJichu">基础题</button>
-	<button id="searchZhiLi" value="常考题笔记/智力题-自作答案.txt" contentId="contentZhiLi">智力题</button>
+	<button class="text" id="searchJiShu" value="常考题笔记/技术题-自作答案.txt" contentId="contentJishu">技术题</button>
+	<button class="text" id="searchJiChu" value="常考题笔记/基础题-自作答案.txt" contentId="contentJichu">基础题</button>
+	<button class="text" id="searchZhiLi" value="常考题笔记/智力题-自作答案.txt" contentId="contentZhiLi">智力题</button>
 
-	<!-- <button id="searchSuFa" value="常考题笔记/算法程序.txt" contentId="aaa">算法程序</button> -->
-	
+	<button class="paragrah" id="searchZhiLi" value="常考题笔记/算法程序.txt" contentId="contentSuFa">算法程序</button>
 
 	<ul id="contentJishu"></ul>
 	<ul id="contentJichu"></ul>
 	<ul id="contentZhiLi"></ul>
 
+	<ul id="contentSuFa"></ul>
+
 <script type="text/javascript" src="jquery-2.1.4.js" ></script>
 <script type="text/javascript">
 	$(function(){
 
-			$("button").click(function(){
+			$(".text").click(function(){
 				$("body > ul").hide();
 				if(!$(this).attr("init")){
 					loadText($(this).val(),$(this).attr("contentId"));
@@ -34,35 +35,73 @@
 				$("#"+$(this).attr("contentId")).show();
 			});
 
-			function loadText(url,id) {
-					$.ajax({
-						type: "GET",
-						url: url,
-						dataType: "text",
-						success: function(data){
-							var str = data.replace(/\n|\r|\s/g,"");
-							var arr1 = str.split('$');
-							var i,j,arr2 = [];
-
-							for(i=0;i<arr1.length;i++){
-								arr2[i] = arr1[i].split('<>');
-								var para =  "<li><span>" + arr2[i][0] + "</span><ul class='hide' >";
-								for(j=1;j<arr2[i].length;j++){
-									para += "<li>" + arr2[i][j] + "</li>";
-								}			
-								para +="</ul></li>";
-								$("#"+id).append(para);
-							}
-							$("#"+ id +" span").bind("click",function(){
-								$(this).next().toggle();
-											
-							});
-						},
-						error: function(jqXHR){
-							alert("发生错误：" + jqXHR.status);
-						}
-					});
+			$(".paragrah").click(function(){
+				$("body > ul").hide();
+				if(!$(this).attr("init")){
+					loadParagrah($(this).val(),$(this).attr("contentId"));
+					$(this).attr("init",true);
 				}
+				$("#"+$(this).attr("contentId")).show();
+			});
+
+
+			function loadText(url,id) {
+				$.ajax({
+					type: "GET",
+					url: url,
+					dataType: "text",
+					success: function(data){
+						var str = data.replace(/\n|\r|\s/g,"");
+						var arr1 = str.split('$');
+						var i,j,arr2 = [];
+
+						for(i=0;i<arr1.length;i++){
+							arr2[i] = arr1[i].split('<>');
+							var para =  "<li><span>" + arr2[i][0] + "</span><ul class='hide' >";
+							for(j=1;j<arr2[i].length;j++){
+								para += "<li>" + arr2[i][j] + "</li>";
+							}			
+							para +="</ul></li>";
+							$("#"+id).append(para);
+						}
+						$("#"+ id +" span").bind("click",function(){
+							$(this).next().toggle();
+											
+						});
+					},
+					error: function(jqXHR){
+						alert("发生错误：" + jqXHR.status);
+					}
+				});
+			}
+			function loadParagrah(url,id) {
+				$.ajax({
+					type: "GET",
+					url: url,
+					dataType: "text",
+					success: function(data){
+						var arr1 = data.split('#');
+						var i,j,arr2 = [];
+
+						for(i=0;i<arr1.length;i++){
+							arr2[i] = arr1[i].split('<>');
+							var para =  "<li><span>" + arr2[i][0] + "</span><ul class='hide' ><pre>";
+							for(j=1;j<arr2[i].length;j++){
+								para += arr2[i][j];
+							}			
+							para +="</pre></li>";
+							$("#"+id).append(para);
+						}
+						$("#"+ id +" span").bind("click",function(){
+							$(this).next().toggle();
+											
+						});
+					},
+					error: function(jqXHR){
+						alert("发生错误：" + jqXHR.status);
+					}
+				});
+			}
 		});
 </script>
 </body>
